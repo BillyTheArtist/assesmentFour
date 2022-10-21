@@ -1,4 +1,4 @@
-let movies = require('./db.json')
+let database = []
 
 module.exports = {
 
@@ -24,55 +24,28 @@ module.exports = {
       
         res.status(200).send(randomFortune);
     },
-    getMovies: (req, res) => {
-        res.send(movies)
-    },
-    deleteMovie: (req, res) => {
-        let deleteId = req.params.id
-        let index = movies.findIndex(element => element.id === +deleteId)
-        movies.splice(index, 1)
-        res.status(200).send(movies)
-    },
-   createMovie : (req, res) => {
-    let {title, rating, imageURL} = req.body
+    createPerson: (req, res) => {
+        let name = req.body.name
+        let powerLevel = req.body.powerLevel
 
-    let greatestId = -1
-    for (let i = 0; i < movies.length; i++) {
-        if (movies[i].id > greatestId) {
-            greatestId = movies[i].id
+        let highestId = 1
+        for (let i = 0; i < database.length; i++) {
+            if (database[i].id > highestId) {
+                highestId = database[i].id
+            }
         }
-    }
 
-    let nextId = greatestId + 1
+        highestId++
 
-    let newMovie = {
-        id: nextId,
-        title,
-        rating,
-        imageURL,
-    }
-
-    movies.push(newMovie)
-    res.status(200).send(movies)
-   },
-   updateMovie: (req, res) => {
-    let type = req.body.type
-    let id = req.params.id
-    // console.log(type + ' to ' + id)
-    let index = movies.findIndex(element => element.id === +id)
-
-    if (type === 'plus') {
-        movies[index].rating++
-        res.send(movies)
-    } else if (type === 'minus') {
-        movies[index].rating--
-        res.send(movies)
-    } else {
-        res.sendStatus(400)
-    }
-   }
-    
-
+        let newPerson = {
+            name,
+            powerLevel,
+            id: highestId,
+        }
+        database.push(newPerson)
+        console.log(database)
+        res.send(database)
+    } 
 }
 
 

@@ -1,65 +1,11 @@
 const complimentBtn = document.getElementById("complimentButton")
-const moviesContainer = document.querySelector('#movies-container')
 const form = document.querySelector('form')
-const baseURL = `http://localhost:4004/api/movies`
+let creationForm = document.getElementById("creation-form")
+let nameInput = document.getElementById("name-input")
+let powerLevelInput = document.getElementById("p-level-input")
 
 
-const moviesCallback = ({ data: movies }) => displayMovies(movies)
-const errCallback = err => console.log(err.response.data)
 
-const getAllMovies = () => axios.get(baseURL).then(moviesCallback).catch(errCallback)
-const createMovie = body => axios.post(baseURL, body).then(moviesCallback).catch(errCallback)
-const deleteMovie = id => axios.delete(`${baseURL}/${id}`).then(moviesCallback).catch(errCallback)
-const updateMovie = (id, type) => axios.put(`${baseURL}/${id}`, {type}).then(moviesCallback).catch(errCallback)
-
-function submitHandler(e) {
-    e.preventDefault()
-
-    let title = document.querySelector('#title')
-    let rating = document.querySelector('input[name="ratings"]:checked')
-    let imageURL = document.querySelector('#img')
-
-    let bodyObj = {
-        title: title.value,
-        rating: rating.value, 
-        imageURL: imageURL.value
-    }
-
-    createMovie(bodyObj)
-
-    title.value = ''
-    rating.checked = false
-    imageURL.value = ''
-}
-
-function createMovieCard(movie) {
-    const movieCard = document.createElement('div')
-    movieCard.classList.add('movie-card')
-
-    movieCard.innerHTML = `<img alt='movie cover' src=${movie.imageURL} class="movie-cover"/>
-    <p class="movie-title">${movie.title}</p>
-    <div class="btns-container">
-        <button onclick="updateMovie(${movie.id}, 'minus')">-</button>
-        <p class="movie-rating">${movie.rating} stars</p>
-        <button onclick="updateMovie(${movie.id}, 'plus')">+</button>
-    </div>
-    <button onclick="deleteMovie(${movie.id})">delete</button>
-    `
-
-
-    moviesContainer.appendChild(movieCard)
-}
-
-function displayMovies(arr) {
-    moviesContainer.innerHTML = ``
-    for (let i = 0; i < arr.length; i++) {
-        createMovieCard(arr[i])
-    }
-}
-
-form.addEventListener('submit', submitHandler)
-
-getAllMovies()
 
 
 const getCompliment = () => {
@@ -83,7 +29,29 @@ const getFortune = () => {
     });
 };
 
+const createPerson = (event) => {
+event.preventDefault()
+
+let myBody = {
+    name: nameInput.value,
+    powerLevel: powerLevelInput.value,
+}
+
+axios.post("http://localhost:4000/api/create/", myBody)
+.then((response) => {
+    let db = response.data
+    console.log(db)
+})
+.catch((err) => {
+    console.log(err)
+})
+}
+
+nameInput.value = ''
+powerLevelInput.value = ''
+
 fortuneBtn.addEventListener('click', getFortune)
+creationForm.addEventListener('submit', createPerson)
 
 
 
