@@ -45,7 +45,19 @@ module.exports = {
         database.push(newPerson)
         console.log(database)
         res.send(database)
-    } 
+    },
+ 
+    getPeople: (req, res) => {
+    
+    res.status(200).send(database);  
+    },
+    deletePerson: (req, res) => {
+        let name = req.body.name
+        let index = database.findIndex((person) => person.name === name)
+        console.log(index)
+        database.splice(index, 1)
+        res.status(200)
+    }
 }
 
 

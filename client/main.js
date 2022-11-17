@@ -3,9 +3,8 @@ const form = document.querySelector('form')
 let creationForm = document.getElementById("creation-form")
 let nameInput = document.getElementById("name-input")
 let powerLevelInput = document.getElementById("p-level-input")
-
-
-
+let personButton = document.getElementById('personButton')
+let deleteButton = document.getElementById('deleteButton')
 
 
 const getCompliment = () => {
@@ -29,7 +28,7 @@ const getFortune = () => {
     });
 };
 
-const createPerson = (event) => {
+let createPerson = (event) => {
 event.preventDefault()
 
 let myBody = {
@@ -47,6 +46,8 @@ axios.post("http://localhost:4000/api/create/", myBody)
 })
 }
 
+
+
 nameInput.value = ''
 powerLevelInput.value = ''
 
@@ -54,4 +55,33 @@ fortuneBtn.addEventListener('click', getFortune)
 creationForm.addEventListener('submit', createPerson)
 
 
+let getPeople = () => {
+    axios.get("http://localhost:4000/api/people/")
+        .then(res => {
+            const data = res.data;
+            console.log(data);
+    });
+}
 
+personButton.addEventListener('click', getPeople)
+
+
+let deletePerson = () => {
+   
+    // axios.delete("http://localhost:4000/api/delete/", myBody)
+    axios.delete("http://localhost:4000/api/delete/", {
+        
+        data: {
+            name: nameInput.value,
+        }
+      })
+    .then((response) => {
+        let db = response.data
+        console.log('delete person', db)
+    })
+    .catch((err) => {
+        console.log(err)
+    })
+    }
+
+    deleteButton.addEventListener('click', deletePerson)
